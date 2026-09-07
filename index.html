@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Ma routine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="description" content="Mes priorités, ma to-do list et mes rituels quotidiens.">
+<meta name="theme-color" content="#4B24D6">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ma routine">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #F4F1FE; }
+  #root { height: 100%; }
+  .app { height: 100dvh; }
+  .panneau { padding-top: calc(14px + env(safe-area-inset-top)) !important; }
+  #secours { display: none; font-family: system-ui, sans-serif; padding: 40px 24px; color: #1A1330; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="secours">
+  <h1 style="font-size:19px">L'application n'a pas pu démarrer</h1>
+  <p>Vérifie ta connexion internet, puis recharge la page.</p>
+</div>
+
+<script>
+/* Sauvegarde dans le navigateur (remplace le stockage de Claude) */
+window.storage = {
+  async get(cle) {
+    const v = localStorage.getItem(cle);
+    if (v === null) throw new Error("clé absente");
+    return { key: cle, value: v, shared: false };
+  },
+  async set(cle, valeur) {
+    localStorage.setItem(cle, valeur);
+    return { key: cle, value: valeur, shared: false };
+  },
+  async delete(cle) {
+    localStorage.removeItem(cle);
+    return { key: cle, deleted: true, shared: false };
+  },
+  async list(prefixe) {
+    const p = prefixe || "";
+    return { keys: Object.keys(localStorage).filter((k) => k.startsWith(p)), prefix: p, shared: false };
+  }
+};
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script>
+  if (!window.React || !window.ReactDOM) {
+    document.write('<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"><\/script>');
+    document.write('<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"><\/script>');
+  }
+</script>
+<script src="app.js?v=2" onerror="document.getElementById('secours').style.display='block'"></script>
+<script>
+  if (!document.getElementById("root").hasChildNodes()) {
+    document.getElementById("secours").style.display = "block";
+  }
+</script>
+</body>
+</html>
